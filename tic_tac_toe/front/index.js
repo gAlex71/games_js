@@ -20,12 +20,27 @@ ws.onmessage = (message) => {
     }
 
     if(responce.method === 'update'){
-        fields = responce.fields,
-        turn = responce.turn,
+        fields = responce.fields;
+        turn = responce.turn;
         isGameActive = symbol === turn;
 
         updateBoard();
         updateMessage();
+    }
+
+    if(responce.method === 'result'){
+        fields = responce.fields;
+        updateBoard();
+        isGameActive = false;
+
+        setTimeout(() => {
+            messageElement.textContent = responce.message;
+        }, 100);
+    }
+
+    if(responce.method === 'left'){
+        isGameActive = false;
+        messageElement.textContent = responce.message;
     }
 }
 

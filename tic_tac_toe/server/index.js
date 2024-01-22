@@ -1,4 +1,4 @@
-const express  = require('express');
+const express = require('express');
 const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
@@ -19,62 +19,135 @@ let clientsIdWaitingMatch = [];
 //Связка игроков по id
 const opponents = {};
 
-wss.on('connection', connection => {
-    //Присваиваем каждому клиенту id
-    const clientId = createClientId();
-    //Сохраняем соединение для клиента по id
-    clientConnections[clientId] = connection;
+wss.on('connection', (connection) => {
+	//Присваиваем каждому клиенту id
+	const clientId = createClientId();
+	//Сохраняем соединение для клиента по id
+	clientConnections[clientId] = connection;
 
-    //Сопоставляем клиентов
-    matchClients(clientId);
+	//Сопоставляем клиентов
+	matchClients(clientId);
 
-    connection.on('message', message => {
-        const responce = JSON.parse(message);
-    
-        if(responce.method === 'move'){
-            moveHandler(responce, clientId);
-        }
+	connection.on('message', (message) => {
+		const responce = JSON.parse(message);
+
+		if (responce.method === 'move') {
+			moveHandler(responce, clientId);
+		}
+	});
+
+    connection.on('close', () => {
+        closeClient(connection, clientId);
     })
-})
+});
 
-function createClientId () {
-    countClientId++;
-    return countClientId;
+function createClientId() {
+	countClientId++;
+	return countClientId;
 }
 
-function matchClients (clientId) {
-    clientsIdWaitingMatch.push(clientId);
+function matchClients(clientId) {
+	clientsIdWaitingMatch.push(clientId);
 
-    if(clientsIdWaitingMatch.length < 2) return;
+	if (clientsIdWaitingMatch.length < 2) return;
 
-    //Достаем и сохраняем id игроков
-    const firstClientId = clientsIdWaitingMatch.shift();
-    const secondClientId = clientsIdWaitingMatch.shift();
+	//Достаем и сохраняем id игроков
+	const firstClientId = clientsIdWaitingMatch.shift();
+	const secondClientId = clientsIdWaitingMatch.shift();
 
-    opponents[firstClientId] = secondClientId;
-    opponents[secondClientId] = firstClientId;
+	opponents[firstClientId] = secondClientId;
+	opponents[secondClientId] = firstClientId;
 
-    //Отправляем каждому из игроков сообщение
-    clientConnections[firstClientId].send(JSON.stringify({
-        method: 'join',
-        symbol: 'X',
-        turn: 'X'
-    }));
-    clientConnections[secondClientId].send(JSON.stringify({
-        method: 'join',
-        symbol: 'O',
-        turn: 'X'
-    }));
+	//Отправляем каждому из игроков сообщение
+	clientConnections[firstClientId].send(
+		JSON.stringify({
+			method: 'join',
+			symbol: 'X',
+			turn: 'X',
+		})
+	);
+	clientConnections[secondClientId].send(
+		JSON.stringify({
+			method: 'join',
+			symbol: 'O',
+			turn: 'X',
+		})
+	);
 }
 
 function moveHandler(responce, clientId) {
-    const opponentClientId = opponents[clientId];
+	const opponentClientId = opponents[clientId];
 
-    [clientId, opponentClientId].forEach((id) => {
-        clientConnections[id].send(JSON.stringify({
-            method: 'update',
-            turn: responce.symbol === 'X' ? 'O' : 'X',
-            fields: responce.fields
-        }))
+	if (checkWin(responce.fields)) {
+		[clientId, opponentClientId].forEach((id) => {
+			clientConnections[id].send(
+				JSON.stringify({
+					method: 'result',
+					message: `${responce.symbol} win!`,
+					fields: responce.fields,
+				})
+			);
+		});
+        return;
+	}
+
+    if (checkDraw(responce.fields)) {
+		[clientId, opponentClientId].forEach((id) => {
+			clientConnections[id].send(
+				JSON.stringify({
+					method: 'result',
+					message: 'Draw',
+					fields: responce.fields,
+				})
+			);
+		});
+        return;
+	}
+
+	[clientId, opponentClientId].forEach((id) => {
+		clientConnections[id].send(
+			JSON.stringify({
+				method: 'update',
+				turn: responce.symbol === 'X' ? 'O' : 'X',
+				fields: responce.fields,
+			})
+		);
+	});
+}
+
+const winningCombos = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], //rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], //colums
+    [0, 4, 8], [2, 4, 6] //diagonals
+];
+
+function checkWin(fields) {
+    // проверяем, есть ли совпадение с выигрышными комбинациями
+    return winningCombos.some((combo) => {
+        const [first, second, thirth] = combo;
+
+        return fields[first] !== '' && fields[first] === fields[second] && fields[first] === fields[thirth];
     })
+}
+
+function checkDraw(fields) {
+    //Проверяем, заполнены ли все поля
+    return fields.every(symbol => symbol === 'X' || symbol === 'O');
+}
+
+function closeClient(connect, clientId) {
+    connect.close();
+
+    //Проверяем, находился ли вышедший клиент в очереди
+    const isLeftUnmatchedClient = clientsIdWaitingMatch.some(unmatchedClientId => unmatchedClientId === clientId);
+
+    if(isLeftUnmatchedClient){
+        clientsIdWaitingMatch = clientsIdWaitingMatch.filter(clientWaiting => clientWaiting !== clientId);
+    }else{
+        const opponentClientId = opponents[clientId];
+        clientConnections[opponentClientId].send(JSON.stringify({
+            method: 'left',
+            message: 'opponent left game'
+        }));
+    }
 }
