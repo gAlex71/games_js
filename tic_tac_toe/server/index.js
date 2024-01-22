@@ -30,7 +30,10 @@ wss.on('connection', connection => {
 
     connection.on('message', message => {
         const responce = JSON.parse(message);
-        console.log(responce);
+    
+        if(responce.method === 'move'){
+            moveHandler(responce, clientId);
+        }
     })
 })
 
@@ -62,4 +65,16 @@ function matchClients (clientId) {
         symbol: 'O',
         turn: 'X'
     }));
+}
+
+function moveHandler(responce, clientId) {
+    const opponentClientId = opponents[clientId];
+
+    [clientId, opponentClientId].forEach((id) => {
+        clientConnections[id].send(JSON.stringify({
+            method: 'update',
+            turn: responce.symbol === 'X' ? 'O' : 'X',
+            fields: responce.fields
+        }))
+    })
 }
