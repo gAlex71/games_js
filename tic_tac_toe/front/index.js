@@ -4,6 +4,7 @@ let symbol = null;
 let turn = null;
 let isGameActive = false;
 
+const boardElement = document.querySelector('.board');
 const messageElement = document.querySelector('.message');
 const cellElements = document.querySelectorAll('.cell');
 const scoreElement = document.querySelector('.score');
@@ -35,8 +36,12 @@ ws.onmessage = (message) => {
         fields = responce.fields;
         updateBoard();
         isGameActive = false;
+        
+        let winLineDiv = document.createElement('div');
+        winLineDiv.className = responce.winLine;
 
         setTimeout(() => {
+            boardElement.appendChild(winLineDiv);
             messageElement.textContent = responce.message === symbol ? 'You win' : 'You lose';
         }, 100);
     }

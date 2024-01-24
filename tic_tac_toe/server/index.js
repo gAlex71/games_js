@@ -18,6 +18,7 @@ const clientConnections = {};
 let clientsIdWaitingMatch = [];
 //Связка игроков по id
 const opponents = {};
+let winLineStyle = '';
 
 wss.on('connection', (connection) => {
 	//Присваиваем каждому клиенту id
@@ -85,6 +86,7 @@ function moveHandler(responce, clientId) {
 					method: 'result',
 					message: responce.symbol,
 					fields: responce.fields,
+					winLine: winLineStyle
 				})
 			);
 		});
@@ -98,6 +100,7 @@ function moveHandler(responce, clientId) {
 					method: 'result',
 					message: 'Draw',
 					fields: responce.fields,
+					winLine: ''
 				})
 			);
 		});
@@ -116,17 +119,22 @@ function moveHandler(responce, clientId) {
 }
 
 const winningCombos = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], //rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], //colums
-    [0, 4, 8], [2, 4, 6] //diagonals
+	{style: 'line horizontal-top', nums: [0, 1, 2]}, {style: 'line horizontal-middle', nums: [3, 4, 5]}, {style: 'line horizontal-bottom', nums: [6, 7, 8]}, //rows
+    {style: 'line vertical-left', nums: [0, 3, 6]}, {style: 'line vertical-middle', nums: [1, 4, 7]}, {style: 'line vertical-right', nums: [2, 5, 8]}, //colums
+    {style: 'line diagonal-left', nums: [0, 4, 8]}, {style: 'line diagonal-right', nums: [2, 4, 6]} //diagonals
 ];
 
 function checkWin(fields) {
     // проверяем, есть ли совпадение с выигрышными комбинациями
-    return winningCombos.some((combo) => {
-        const [first, second, thirth] = combo;
+    return winningCombos.some(({ nums, style }) => {
+        const [first, second, thirth] = nums;
 
-        return fields[first] !== '' && fields[first] === fields[second] && fields[first] === fields[thirth];
+        if(fields[first] !== '' && fields[first] === fields[second] && fields[first] === fields[thirth]){
+			winLineStyle = style;
+			return true;
+		}else{
+			return false;
+		}
     })
 }
 

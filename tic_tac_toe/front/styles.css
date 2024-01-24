@@ -105,33 +105,33 @@ body {
 /* Горизонтальная линия через верхнюю горизонтальную линию */
 .line.horizontal-top {
 	position: absolute;
-	top: calc(10vmin - 1vmin);
+	top: calc(10vmin - 0.5vmin);
 	left: 0;
 	width: 100%;
 	height: 1vmin;
-	background-color: #545454;
+	background-color: black;
 	z-index: 1;
   }
   
   /* Горизонтальная линия через среднюю горизонтальную линию */
   .line.horizontal-middle {
 	position: absolute;
-	top: calc(32vmin - 1vmin); /* Положение средней горизонтальной линии минус половина толщины линии */
+	top: calc(32vmin - 0.5vmin); /* Положение средней горизонтальной линии минус половина толщины линии */
 	left: 0;
 	width: 100%;
 	height: 1vmin;
-	background-color: r#545454;
+	background-color: black;
 	z-index: 1;
   }
   
   /* Горизонтальная линия через нижнюю горизонтальную линию */
   .line.horizontal-bottom {
 	position: absolute;
-	bottom: calc(10vmin - 1vmin);
+	bottom: calc(10vmin - 0.5vmin);
 	left: 0;
 	width: 100%;
 	height: 1vmin;
-	background-color: #545454;
+	background-color: black;
 	z-index: 1;
   }
   
@@ -139,10 +139,10 @@ body {
   .line.vertical-left {
 	position: absolute;
 	top: 0;
-	left: calc(20vmin / 2 - 1vmin); /* Половина ширины ячейки минус половина толщины линии */
+	left: calc(20vmin / 2 - 0.5vmin); /* Половина ширины ячейки минус половина толщины линии */
 	width: 1vmin;
 	height: 100%;
-	background-color: #545454;
+	background-color: black;
 	z-index: 1;
   }
   
@@ -150,10 +150,10 @@ body {
   .line.vertical-middle {
 	position: absolute;
 	top: 0;
-	left: calc(32vmin - 1vmin); /* Позиция центрального столбца минус половина толщины линии */
+	left: calc(32vmin - 0.5vmin); /* Позиция центрального столбца минус половина толщины линии */
 	width: 1vmin;
 	height: 100%;
-	background-color: #545454;
+	background-color: black;
 	z-index: 1;
   }
   
@@ -161,20 +161,20 @@ body {
   .line.vertical-right {
 	position: absolute;
 	top: 0;
-	right: calc(20vmin / 2 - 1vmin); /* Половина ширины ячейки минус половина толщины линии */
+	right: calc(20vmin / 2 - 0.5vmin); /* Половина ширины ячейки минус половина толщины линии */
 	width: 1vmin;
 	height: 100%;
-	background-color: #545454;
+	background-color: black;
 	z-index: 1;
   }
   
   /* Диагональная линия слева направо */
   .line.diagonal-left {
 	position: absolute;
-	top: 50%;
+	top: calc(50% - 0.5vmin);
 	width: 100%;
 	height: 1vmin;
-	background-color: #545454;
+	background-color: black;
 	transform: rotate(45deg);
 	z-index: 1;
   }
@@ -182,10 +182,10 @@ body {
   /* Диагональная линия справа налево */
   .line.diagonal-right {
 	position: absolute;
-	top: 50%;
+	top: calc(50% - 0.5vmin);
 	width: 100%;
 	height: 1vmin;
-	background-color: #545454;
+	background-color: black;
 	transform: rotate(-45deg);
 	z-index: 1;
   }
