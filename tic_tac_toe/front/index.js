@@ -6,6 +6,7 @@ let isGameActive = false;
 
 const messageElement = document.querySelector('.message');
 const cellElements = document.querySelectorAll('.cell');
+const scoreElement = document.querySelector('.score');
 let fields = ['', '', '', '', '', '', '', '', ''];
 
 ws.onmessage = (message) => {
@@ -15,6 +16,8 @@ ws.onmessage = (message) => {
         symbol = responce.symbol;
         turn = responce.turn;
         isGameActive = symbol === turn;
+
+        scoreElement.textContent = 'Score: 0 - 0'
 
         updateMessage();
     }
@@ -34,7 +37,7 @@ ws.onmessage = (message) => {
         isGameActive = false;
 
         setTimeout(() => {
-            messageElement.textContent = responce.message;
+            messageElement.textContent = responce.message === symbol ? 'You win' : 'You lose';
         }, 100);
     }
 

@@ -83,7 +83,7 @@ function moveHandler(responce, clientId) {
 			clientConnections[id].send(
 				JSON.stringify({
 					method: 'result',
-					message: `${responce.symbol} win!`,
+					message: responce.symbol,
 					fields: responce.fields,
 				})
 			);
