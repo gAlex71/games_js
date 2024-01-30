@@ -14,6 +14,51 @@ const cells = document.querySelectorAll('.grid>div');
 
 draw();
 
+initKeyDown();
+
+function initKeyDown() {
+    document.addEventListener('keydown', onKeyDown);
+}
+
+function onKeyDown(event) {
+    switch(event.key) {
+        case('ArrowUp'):
+            rotate();
+            break;
+        case('ArrowDown'):
+            moveDown();
+            break;
+        case('ArrowLeft'):
+            moveLeft();
+            break;
+        case('ArrowRight'):
+            moveRight();
+            break;
+        default:
+            break;
+    };
+};
+
+function rotate() {
+    tetris.rotateTetromino();
+    draw();
+}
+
+function moveDown() {
+    tetris.moveTetrominoDown();
+    draw();
+};
+
+function moveLeft() {
+    tetris.moveTetrominoLeft();
+    draw();
+};
+
+function moveRight() {
+    tetris.moveTetrominoRight();
+    draw();
+};
+
 function draw() {
     //Очищаем от всех стилей ячейки
     cells.forEach(cell => cell.removeAttribute('class'));
