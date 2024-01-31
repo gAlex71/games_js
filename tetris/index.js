@@ -1,4 +1,4 @@
-import { convertPositionToIndex } from "./helpers.js";
+import { PLAYFIELD_COLUMNS, PLAYFIELD_ROWS, convertPositionToIndex } from "./helpers.js";
 import { Tetris } from "./tetris.js";
 
 const gridElement = document.querySelector('.grid');
@@ -63,8 +63,21 @@ function draw() {
     //Очищаем от всех стилей ячейки
     cells.forEach(cell => cell.removeAttribute('class'));
 
+    drawPlayField();
     drawTetramino();
 };
+
+function drawPlayField() {
+    for(let row = 0; row < PLAYFIELD_ROWS; row++){
+        for(let column = 0; column < PLAYFIELD_COLUMNS; column++){
+            if(!tetris.playfield[row][column]) continue;
+
+            const name = tetris.playfield[row][column];
+            const cellIndex = convertPositionToIndex(row, column);
+            cells[cellIndex].classList.add(name);
+        }
+    }
+}
 
 function drawTetramino() {
     const name = tetris.tetromino.name;
