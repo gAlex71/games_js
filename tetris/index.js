@@ -36,6 +36,9 @@ function onKeyDown(event) {
         case('ArrowRight'):
             moveRight();
             break;
+        case(' '):
+            dropDown();
+            break;
         default:
             break;
     };
@@ -67,6 +70,18 @@ function moveRight() {
     draw();
 };
 
+function dropDown() {
+    tetris.dropTetrominoDown();
+    draw();
+
+    stopLoop();
+    startLoop();
+
+    if(tetris.isGameOver){
+        gameOver();
+    }
+}
+
 function startLoop() {
     // Используем requestAnimationFrame для запланированной перерисовки кадра
     timeoutId = setTimeout(() => requestId = requestAnimationFrame(moveDown), 500);
@@ -83,6 +98,7 @@ function draw() {
 
     drawPlayField();
     drawTetramino();
+    drawGhostTetramino();
 };
 
 function drawPlayField() {
@@ -116,4 +132,18 @@ function drawTetramino() {
 function gameOver() {
     stopLoop();
     document.removeEventListener('keydown', onKeyDown);
+}
+
+function drawGhostTetramino() {
+    const tetrominoMatrixSize = tetris.tetromino.matrix.length;
+    for(let row = 0; row < tetrominoMatrixSize; row++){
+        for(let column = 0; column < tetrominoMatrixSize; column++){
+            if (!tetris.tetromino.matrix[row][column]) continue;
+            if (tetris.tetromino.row + row < 0) continue;
+            //Пересчитываем индекс из матрицы в индекс div элементов
+            const cellIndex = convertPositionToIndex(tetris.tetromino.row + row, tetris.tetromino.column + column);
+            //Добавляем к div класс с именем фигуры
+            cells[cellIndex].classList.add('ghost');
+        }
+    }
 }
