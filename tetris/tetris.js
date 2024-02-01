@@ -179,7 +179,7 @@ export class Tetris {
     calculateGhostPosition() {
         const tetrominoRow = this.tetromino.row;
         this.tetromino.row++;
-        while(this.isValid){
+        while(this.isValid()){
             this.tetromino.row++;
         }
 

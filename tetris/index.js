@@ -139,9 +139,9 @@ function drawGhostTetramino() {
     for(let row = 0; row < tetrominoMatrixSize; row++){
         for(let column = 0; column < tetrominoMatrixSize; column++){
             if (!tetris.tetromino.matrix[row][column]) continue;
-            if (tetris.tetromino.row + row < 0) continue;
+            if (tetris.tetromino.ghostRow + row < 0) continue;
             //Пересчитываем индекс из матрицы в индекс div элементов
-            const cellIndex = convertPositionToIndex(tetris.tetromino.row + row, tetris.tetromino.column + column);
+            const cellIndex = convertPositionToIndex(tetris.tetromino.ghostRow + row, tetris.tetromino.ghostColumn + column);
             //Добавляем к div класс с именем фигуры
             cells[cellIndex].classList.add('ghost');
         }
