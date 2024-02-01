@@ -11,6 +11,7 @@ export class Tetris {
     constructor() {
         this.playfield;
         this.tetromino;
+        this.isGameOver = false;
         this.init();
     }
 
@@ -97,7 +98,11 @@ export class Tetris {
     isOutsideOfGameBoard(row, column) {
         return this.tetromino.column + column < 0 ||
         this.tetromino.column + column >= PLAYFIELD_COLUMNS ||
-        this.tetromino.row + row >= this.playfield.length
+        this.tetromino.row + row >= this.playfield.length;
+    }
+
+    isOutsideOfTopBoard(row) {
+        return this.tetromino.row + row < 0;
     }
 
     placeTetromino() {
@@ -106,12 +111,52 @@ export class Tetris {
         for(let row = 0; row < matrixSize; row++){
             for(let column = 0; column < matrixSize; column++){
                 if(!this.tetromino.matrix[row][column]) continue;
+                //Проверяем выходит ли строка за верхние пределы поля
+                if(this.isOutsideOfTopBoard(row)){
+                    this.isGameOver = true;
+                    return;
+                }
                 
                 //Добавляем в поле название фигуры
                 this.playfield[this.tetromino.row + row][this.tetromino.column + column] = this.tetromino.name;
             }
         }
 
+        //Удаляем все заполненые строки
+        this.processFilledRows();
         this.generateTetromino();
+    }
+
+    processFilledRows() {
+        const filledLines = this.findFilledRows();
+        this.removeFilledRows(filledLines);
+    }
+
+    findFilledRows() {
+        const filledRows = [];
+
+        for(let row = 0; row < PLAYFIELD_ROWS; row++) {
+            //Проверяем каждый элемент строки
+            if(this.playfield[row].every(cell => Boolean(cell))) {
+                filledRows.push(row);
+            }
+        }
+
+        return filledRows;
+    }
+
+    removeFilledRows(filledRows) {
+        filledRows.forEach(row => {
+            this.dropRowsAbove(row);
+        });
+    }
+
+    dropRowsAbove(rowToDelete) {
+        for(let row = rowToDelete; row > 0; row--){
+            this.playfield[row] = this.playfield[row - 1];
+        }
+
+        //Заполняем самую верхнюю строку
+        this.playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
     }
 }

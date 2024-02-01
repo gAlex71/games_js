@@ -11,8 +11,10 @@ for(let i = 0; i < 200; i++){
 const tetris = new Tetris();
 //Получаем все ячейки поля
 const cells = document.querySelectorAll('.grid>div');
+let timeoutId;
+let requestId;
 
-draw();
+moveDown();
 
 initKeyDown();
 
@@ -47,6 +49,12 @@ function rotate() {
 function moveDown() {
     tetris.moveTetrominoDown();
     draw();
+    stopLoop();
+    startLoop();
+
+    if(tetris.isGameOver){
+        gameOver();
+    }
 };
 
 function moveLeft() {
@@ -58,6 +66,16 @@ function moveRight() {
     tetris.moveTetrominoRight();
     draw();
 };
+
+function startLoop() {
+    // Используем requestAnimationFrame для запланированной перерисовки кадра
+    timeoutId = setTimeout(() => requestId = requestAnimationFrame(moveDown), 500);
+};
+
+function stopLoop() {
+    cancelAnimationFrame(requestId);
+    clearTimeout(timeoutId);
+}
 
 function draw() {
     //Очищаем от всех стилей ячейки
@@ -93,4 +111,9 @@ function drawTetramino() {
             cells[cellIndex].classList.add(name);
         }
     }
+}
+
+function gameOver() {
+    stopLoop();
+    document.removeEventListener('keydown', onKeyDown);
 }
