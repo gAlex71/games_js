@@ -11,12 +11,22 @@ for(let i = 0; i < 200; i++){
 const tetris = new Tetris();
 //Получаем все ячейки поля
 const cells = document.querySelectorAll('.grid>div');
+const startButton = document.querySelector('.start_button');
 let timeoutId;
 let requestId;
 
-moveDown();
-
 initKeyDown();
+
+clickStart();
+
+function clickStart() {
+    startButton.addEventListener('click', startGame);
+}
+
+function startGame() {
+    tetris.init();
+    moveDown();
+}
 
 function initKeyDown() {
     document.addEventListener('keydown', onKeyDown);

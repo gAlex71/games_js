@@ -20,6 +20,33 @@ body {
     background: linear-gradient(90deg, #395492, #0099c0, #3dd5a8);
 }
 
+.container {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.start_button {
+    width: 50%;
+
+    margin: 10px 0;
+    padding: 5px 0;
+
+    border: none;
+    border-radius: 0.6vh;
+    background-color: rgba(1, 8, 89, 0.3);
+
+    cursor: pointer;
+
+    color: white;
+
+    &:hover {
+        background-color: rgba(1, 8, 89, 0.5);
+    }
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(10, auto);

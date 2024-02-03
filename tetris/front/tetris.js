@@ -12,7 +12,6 @@ export class Tetris {
         this.playfield;
         this.tetromino;
         this.isGameOver = false;
-        this.init();
     }
 
     init() {
