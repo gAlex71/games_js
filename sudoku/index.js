@@ -1,3 +1,3 @@
-import { generateSudoku } from "./generator";
+import { generateSudoku } from "./generator.js";
 
 generateSudoku();
