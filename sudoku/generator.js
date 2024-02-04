@@ -3,7 +3,7 @@ import { BOX_SIZE, GRID_SIZE } from './helpers.js';
 export function generateSudoku() {
     const sudoku = createEmptyGrid();
     resolveSudoku(sudoku);
-    console.table(sudoku);
+    return removeCells(sudoku);
 }
 
 function createEmptyGrid() {
@@ -83,4 +83,24 @@ function validateBox(grid, row, column, value) {
         }
     }
     return true;
+}
+
+function removeCells(grid) {
+    //Количество удаляемых ячеек
+    const DIFFICULTY = 30;  
+    //Полностью клонируем сетку
+    const cloneGrid = [...grid].map((row) => [...row]);
+
+    let i = 0;
+    while(i < DIFFICULTY) {
+        const row = Math.floor(Math.random() * GRID_SIZE);
+        const column = Math.floor(Math.random() * GRID_SIZE);
+
+        if(cloneGrid[row][column] !== null) {
+            cloneGrid[row][column] = null;
+            i++;
+        }
+    }
+
+    return cloneGrid;
 }

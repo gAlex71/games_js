@@ -1,3 +1,4 @@
 import { generateSudoku } from "./generator.js";
+import { Sudoku } from "./sudoku.js";
 
-generateSudoku();
+const sudoku = new Sudoku();
