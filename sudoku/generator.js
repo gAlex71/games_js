@@ -1,4 +1,4 @@
-import { BOX_SIZE, GRID_SIZE } from './helpers.js';
+import { BOX_SIZE, GRID_SIZE, findEmptyCell } from './helpers.js';
 
 export function generateSudoku() {
     const sudoku = createEmptyGrid();
@@ -27,16 +27,6 @@ function resolveSudoku(grid) {
         //Иначе мы заполнили пустую ячейку неверно
         grid[emptyCell.row][emptyCell.column] = null;
     }
-}
-
-function findEmptyCell(grid) {
-    for(let row = 0; row < GRID_SIZE; row++){
-        for(let column = 0; column < GRID_SIZE; column++){
-            //Возвращаем координаты пустой ячейки
-            if(grid[row][column] === null) return { row, column };
-        }
-    }
-    return null;
 }
 
 function getRandomNumbers() {
