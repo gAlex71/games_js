@@ -1,0 +1,88 @@
+:root {
+    --bg: #7c7c7c;
+    --cell-size: 8vmin;
+    --gap: 0.5vmin;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+    user-select: none;
+
+    background-color: var(--bg);
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, auto);
+    grid-template-rows: repeat(9, auto);
+    gap: var(--gap);
+}
+
+.cell {
+    height: var(--cell-size);
+    width: var(--cell-size);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 0.5vmin;
+    font-size: 3vmin;
+
+    color: #222222;
+    background-color: #f2f2f2;
+
+    cursor: pointer;
+}
+
+.cell:nth-child(3),
+.cell:nth-child(6) {
+    margin-right: var(--gap);
+}
+
+.cell:nth-child(19),
+.cell:nth-child(46) {
+    margin-bottom: var(--gap);
+}
+
+.numbers {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    gap: var(--gap);
+    margin-top: 2vmin;
+}
+
+.number,
+.remove {
+    height: var(--cell-size);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 0.5vmin;
+    font-size: 3vmin;
+
+    color: #222222;
+    background-color: #f2f2f2;
+
+    cursor: pointer;
+}
