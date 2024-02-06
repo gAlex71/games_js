@@ -17,3 +17,7 @@ export function convertIndexToPosition(index) {
         column: index % GRID_SIZE
     }
 }
+
+export function convertPositionToIndex(row, column) {
+    return row * GRID_SIZE + column;
+}

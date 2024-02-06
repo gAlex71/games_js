@@ -61,6 +61,10 @@ body {
     background-color: #ffdbb3;
 }
 
+.cell.highlighted {
+    background-color: #fff3e5;
+}
+
 .cell:nth-child(3),
 .cell:nth-child(6) {
     margin-right: var(--gap);
