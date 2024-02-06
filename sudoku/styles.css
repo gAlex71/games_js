@@ -57,12 +57,17 @@ body {
     background-color: #d9d9d9;
 }
 
+.cell.highlighted {
+    background-color: #fff3e5;
+}
+
 .cell.selected {
     background-color: #ffdbb3;
 }
 
-.cell.highlighted {
-    background-color: #fff3e5;
+.cell.error {
+    color: #ffffff;
+    background-color: #ff8c8c;
 }
 
 .cell:nth-child(3),
@@ -97,4 +102,32 @@ body {
     background-color: #f2f2f2;
 
     cursor: pointer;
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0% {
+        transform: scale(1.2);
+    }
+
+    25% {
+        transform: scale(1.2) rotate(30deg);
+    }
+
+    50% {
+        transform: scale(1.2) rotate(-30deg);
+    }
+}
+
+.zoom {
+    animation: zoom 0.5s ease-in-out;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(1.2);
+    }
 }

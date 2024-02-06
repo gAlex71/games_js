@@ -49,7 +49,7 @@ export class Sudoku {
 		//Проходимся по всем ячейкам бокса
 		for (let iRow = firstRowInBox; iRow < firstRowInBox + BOX_SIZE; iRow++) {
 			for (let iColumn = firstColumnInBox; iColumn < firstColumnInBox + BOX_SIZE; iColumn++) {
-				if (grid[iRow][iColumn] === value && iRow !== row && iColumn !== column) {
+				if (this.grid[iRow][iColumn] === value && iRow !== row && iColumn !== column) {
                     duplicates.push({ row: iRow, column: iColumn })
                 }
 			}

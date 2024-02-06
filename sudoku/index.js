@@ -17,12 +17,13 @@ init();
 
 function init() {
     initCells();
-    initCellsEvent();
+    initNumbers();
 }
 
 function initCells() {
     cells = document.querySelectorAll('.cell');
     fillCells();
+    initCellsEvent();
 }
 
 function fillCells() {
@@ -43,7 +44,7 @@ function initCellsEvent() {
 }
 
 function onCellClick(clickedCell, index) {
-    cells.forEach(cell => cell.classList.remove('selected', 'highlighted'));
+    cells.forEach(cell => cell.classList.remove('selected', 'highlighted', 'error', 'shake'));
 
     if(clickedCell.classList.contains('filled')) {
         selectedCellIndex = null;
@@ -56,6 +57,12 @@ function onCellClick(clickedCell, index) {
         //Подсвечиваем рядом стоящие элементы
         highlightCellBy(index);
     }
+
+    if(clickedCell.innerHTML === '') return;
+
+    cells.forEach((cell) => {
+        if(cell.innerHTML === clickedCell.innerHTML) cell.classList.add('selected'); 
+    })
 }
 
 function highlightCellBy(index) {
@@ -95,4 +102,45 @@ function highlightBoxBy(index) {
             cells[cellIndex].classList.add('highlighted');
         }
     }
+}
+
+function highlightDuplicates(duplicatesPositions) {
+    duplicatesPositions.forEach(duplicate => {
+        const index = convertPositionToIndex(duplicate.row, duplicate.column);
+        //Без setTimeout работать будет неверно
+        setTimeout(() => cells[index].classList.add('error', 'shake'), 0);
+    })
+}
+
+function initNumbers() {
+    const numbers = document.querySelectorAll('.number');
+
+    numbers.forEach(number => {
+        number.addEventListener('click', () => onNumberClick(parseInt(number.innerHTML)));
+    })
+}
+
+function onNumberClick(number) {
+    if(!selectedCell) return;
+    if(selectedCell.classList.contains('filled')) return;
+
+    cells.forEach(cell => cell.classList.remove('error', 'shake', 'zoom', 'selected'));
+    selectedCell.classList.add('selected');
+
+    setValueInSelectedCell(number);
+}
+
+function setValueInSelectedCell(number) {
+    const {row, column} = convertIndexToPosition(selectedCellIndex);
+    const duplicatesPositions = sudoku.getDuplicatePositions(row, column, number);
+
+    //Подсвечиваем дублирующие значения
+    if(duplicatesPositions.length) {
+        highlightDuplicates(duplicatesPositions);
+        return;
+    }
+    //Добавляем значение в ячейку
+    sudoku.grid[row][column] = number;
+    selectedCell.innerHTML = number;
+    setTimeout(() => selectedCell.classList.add('zoom'), 0);
 }
