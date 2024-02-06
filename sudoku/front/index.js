@@ -18,6 +18,8 @@ init();
 function init() {
     initCells();
     initNumbers();
+    initRemover();
+    initKeyEvent();
 }
 
 function initCells() {
@@ -128,6 +130,10 @@ function onNumberClick(number) {
     selectedCell.classList.add('selected');
 
     setValueInSelectedCell(number);
+
+    if(!sudoku.hasEmptyCells()) {
+        setTimeout(() => winAnimation(), 500);
+    }
 }
 
 function setValueInSelectedCell(number) {
@@ -143,4 +149,46 @@ function setValueInSelectedCell(number) {
     sudoku.grid[row][column] = number;
     selectedCell.innerHTML = number;
     setTimeout(() => selectedCell.classList.add('zoom'), 0);
+}
+
+function initRemover() {
+    const remover = document.querySelector('.remove');
+    remover.addEventListener('click', () => onRemoveClick());
+}
+
+function onRemoveClick() {
+    if(!selectedCell) return;
+    if(selectedCell.classList.contains('filled')) return;
+
+    cells.forEach(cell => cell.classList.remove('error', 'shake', 'zoom', 'selected'));
+    selectedCell.classList.add('selected');
+
+    const {row, column} = convertIndexToPosition(selectedCellIndex);
+    //Очищаем ячейку
+    selectedCell.innerHTML = '';
+    sudoku.grid[row][column] = null;
+}
+
+function initKeyEvent() {
+    document.addEventListener('keydown', event => {
+        if(event.key === 'Backspace') {
+            onRemoveClick();
+        }else if(event.key >= '1' && event.key <= '9') {
+            onNumberClick(parseInt(event.key));
+        }
+    })
+}
+
+function winAnimation() {
+    cells.forEach(cell => cell.classList.remove('error', 'shake', 'zoom', 'selected', 'highlighted'));
+
+    //Анимация срабатывает на 15мс позже с каждой ячейкой
+    cells.forEach((cell, index) => {
+        setTimeout(() => cell.classList.add('highlighted', 'zoom'), index * 15);
+    })
+
+    //toggle добавляет класс, если его нету, и удаляет, если есть
+    for(let i = 1; i < 10; i++) {
+        setTimeout(() => cells.forEach((cell) => cell.classList.toggle('highlighted')), 500 + cells.length * 15 + 300 * i)
+    }
 }
