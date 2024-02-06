@@ -53,6 +53,14 @@ body {
     cursor: pointer;
 }
 
+.cell.filled {
+    background-color: #d9d9d9;
+}
+
+.cell.selected {
+    background-color: #ffdbb3;
+}
+
 .cell:nth-child(3),
 .cell:nth-child(6) {
     margin-right: var(--gap);
